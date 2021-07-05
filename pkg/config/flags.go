@@ -36,6 +36,7 @@ func newFlagSet() *flag.FlagSet {
 	flagSet.Var(&util.StringArray{}, "auth-whitelisted-name", "A name compared against cert CN for which a request will be passed through")
 	flagSet.String("auth-admin-role", "", "The name of the only role that will be passed on the request if it is found in the list of roles")
 	flagSet.String("auth-default-role", "", "The role given to every request unless it has the auth-admin-role")
+	flagSet.Bool("auth-ns-to-backend-role", false, "Enables adding namespaces to the backend role header")
 
 	//net/http.Server timeouts for the server side of the proxy
 	flagSet.Duration("http-read-timeout", time.Duration(1)*time.Minute, "The maximum duration for reading the entire HTTP request. Zero means no timeout.")

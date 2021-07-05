@@ -83,9 +83,11 @@ func (auth *authorizationHandler) Process(req *http.Request) (*http.Request, err
 
 		projectNames := []string{}
 		projectUIDs := []string{}
+		projectNamesNoq := []string{}
 		for _, project := range projects {
 			projectNames = append(projectNames, fmt.Sprintf("%q", project.Name))
 			projectUIDs = append(projectUIDs, project.UUID)
+			projectNamesNoq = append(projectNamesNoq, project.Name)
 		}
 
 		req.Header.Add(headerForwardedNamespace, strings.Join(projectNames, ","))
@@ -104,6 +106,12 @@ func (auth *authorizationHandler) Process(req *http.Request) (*http.Request, err
 		}
 
 		rs := sets.NewString(roles...)
+		if auth.config.AuthNsToBackendRole {
+			log.Debugf("Proxy has the configurated with AuthNsToBackendRole == %v. Namespaces added to roles.", auth.config.AuthAdminRole)
+			roles = append(roles, projectNamesNoq...)
+			rs = sets.NewString(roles...)
+		}
+
 		if rs.Has(auth.config.AuthAdminRole) {
 			log.Debugf("User has the configurated admin role %v. Removing all other roles.", auth.config.AuthAdminRole)
 			roles = []string{auth.config.AuthAdminRole}

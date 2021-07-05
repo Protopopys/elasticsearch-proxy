@@ -39,6 +39,9 @@ type Options struct {
 	//these are parsed and added to AuthBackEndRoles
 	RawAuthBackEndRole []string `flag:"auth-backend-role"`
 
+	//AuthNsToRole
+	AuthNsToBackendRole bool `flag:"auth-ns-to-backend-role"`
+
 	//AuthBackEndRoles is a map of rolename to SubjectAccessReviews to check to apply a given role to a user
 	AuthBackEndRoles map[string]BackendRoleConfig
 	CacheExpiry      time.Duration `flag:"cache-expiry"`
@@ -96,6 +99,7 @@ func newOptions() *Options {
 		UpstreamFlush:             time.Duration(5) * time.Millisecond,
 		RequestLogging:            false,
 		AuthBackEndRoles:          map[string]BackendRoleConfig{},
+		AuthNsToBackendRole:       false,
 		AuthWhiteListedNames:      []string{},
 		AuthAdminRole:             "",
 		HTTPReadTimeout:           time.Duration(1) * time.Minute,
