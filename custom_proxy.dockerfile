@@ -1,14 +1,15 @@
-FROM golang:1.16.5-alpine3.14 AS builder
+FROM golang:1.16.5-buster AS builder
 ENV REMOTE_SOURCE=${REMOTE_SOURCE:-.}
 
-RUN apk add --no-cache --update make
+RUN apt-get install --no-install-recommends -y  \
+            make
 
 WORKDIR  /go/src/github.com/openshift/elasticsearch-proxy
 COPY ${REMOTE_SOURCE} .
 
 RUN make
 
-FROM alpine:3.14.0
+FROM redhat/ubi8-micro:8.4-81
 COPY --from=builder /go/src/github.com/openshift/elasticsearch-proxy/bin/elasticsearch-proxy /usr/bin/
 ENTRYPOINT ["/usr/bin/elasticsearch-proxy"]
 
