@@ -105,13 +105,12 @@ func (auth *authorizationHandler) Process(req *http.Request) (*http.Request, err
 			}
 		}
 
-		rs := sets.NewString(roles...)
 		if auth.config.AuthNsToBackendRole {
-			log.Debugf("Proxy has the configurated with AuthNsToBackendRole == %v. Namespaces added to roles.", auth.config.AuthAdminRole)
+			log.Debugf("Proxy has the configurated with AuthNsToBackendRole == %v. Namespaces added to roles.", auth.config.AuthNsToBackendRole)
 			roles = append(roles, projectNamesNoq...)
-			rs = sets.NewString(roles...)
 		}
 
+		rs := sets.NewString(roles...)
 		if rs.Has(auth.config.AuthAdminRole) {
 			log.Debugf("User has the configurated admin role %v. Removing all other roles.", auth.config.AuthAdminRole)
 			roles = []string{auth.config.AuthAdminRole}
